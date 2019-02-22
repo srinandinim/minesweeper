@@ -1,3 +1,4 @@
+package minesweeper;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -10,39 +11,50 @@ public class Minesweeper extends JPanel implements ActionListener, MouseListener
 	JFrame frame;
 
 	JMenuBar menuBar;
-	JMenu menu;
+	JMenu game;
+	JMenu display;
+	JMenu control;
+	JMenuItem[] levels;
 	JMenuItem beginner;
 	JMenuItem intermediate;
 	JMenuItem expert;
 
 	JPanel panel;
-	int dimension = 20;
+	int width = 9;
+	int height = 9;
 	JToggleButton[][] togglers;
 	ImageIcon mine;
 
 	public Minesweeper(){
 		frame = new JFrame("Minesweeper");
 		frame.add(this);
-		frame.setSize(1000,800);
+		frame.setSize(850,700);
 
 		mine = new ImageIcon ("mine.png");
-		mine = new ImageIcon(mine.getImage().getScaledInstance(frame.getWidth()/dimension, frame.getHeight()/dimension, Image.SCALE_SMOOTH));
+		mine = new ImageIcon(mine.getImage().getScaledInstance(frame.getWidth()/width, frame.getHeight()/height, Image.SCALE_SMOOTH));
 
 		menuBar = new JMenuBar();
-		menu = new JMenu ("Game");
+		game = new JMenu ("Game");
+		display = new JMenu ("Display");
+		control = new JMenu ("Control");
+		
 		beginner = new JMenuItem ("Beginner");
 		intermediate = new JMenuItem ("Intermediate");
 		expert = new JMenuItem ("Expert");
-
-		menu.add(beginner);
-		menu.add(intermediate);
-		menu.add(expert);
-		menuBar.add(menu);
-		beginner.addActionListener(this);
-		intermediate.addActionListener(this);
-		expert.addActionListener(this);
-
-		togglers = new JToggleButton[dimension][dimension];
+		levels = new JMenuItem[3];
+		levels[0] = beginner;
+		levels[1] = intermediate;
+		levels[2] = expert;
+		for (JMenuItem item: levels) {
+			item.addActionListener(this);
+			game.add(item);
+		}
+		
+		menuBar.add(game);
+		menuBar.add(display);
+		menuBar.add(control);
+		
+		togglers = new JToggleButton[width][height];
 		panel = new JPanel();
 		panel.setLayout(new GridLayout(togglers.length, togglers[0].length));
 		for (int i = 0; i < togglers.length; i++){
@@ -61,6 +73,18 @@ public class Minesweeper extends JPanel implements ActionListener, MouseListener
 	}
 
 	public void actionPerformed (ActionEvent e){
+		if (e.getSource() == beginner) {
+			width = 9;
+			height = 9;
+		}
+		if (e.getSource() == intermediate) {
+			width = 16;
+			height = 16;
+		}
+		if (e.getSource() == expert) {
+			width = 30;
+			height = 16;
+		}
 	}
 
 	public void mousePressed (MouseEvent e){
