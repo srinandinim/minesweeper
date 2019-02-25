@@ -49,7 +49,7 @@ public class Minesweeper extends JPanel implements ActionListener, MouseListener
 
 		menuBar = new JMenuBar();
 		game = new JMenu ("Game");
-		display = new JMenu ("Display");
+		display = new JMenu ("Icons");
 		control = new JMenu ("Control");
 
 		beginner = new JMenuItem ("Beginner");
@@ -101,9 +101,9 @@ public class Minesweeper extends JPanel implements ActionListener, MouseListener
 		center.setPreferredSize(new Dimension(50, 50));
 		scoreBoard.add(center);
 
-		topPanel = new JPanel (new GridLayout (2, 1));
-		topPanel.add(menuBar);
-		topPanel.add(scoreBoard);
+		topPanel = new JPanel (new BorderLayout());
+		topPanel.add(menuBar, BorderLayout.NORTH);
+		topPanel.add(scoreBoard, BorderLayout.SOUTH);
 
 		frame.add(topPanel, BorderLayout.NORTH);
 		frame.add(panel, BorderLayout.CENTER);
