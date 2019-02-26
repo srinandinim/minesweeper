@@ -1,3 +1,4 @@
+package minesweeper;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -99,6 +100,7 @@ public class Minesweeper extends JPanel implements ActionListener, MouseListener
 		scoreBoard = new JPanel();
 		center = new JButton (centerImage);
 		center.setPreferredSize(new Dimension(50, 50));
+		center.addActionListener(this);
 		scoreBoard.add(center);
 
 		topPanel = new JPanel (new BorderLayout());
@@ -129,10 +131,31 @@ public class Minesweeper extends JPanel implements ActionListener, MouseListener
 			changeLevel();
 		}
 		if (e.getSource() == mDefault){
+			centerImage = new ImageIcon ("dCenter.png");
+			centerImage = new ImageIcon(centerImage.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
+			mine = new ImageIcon ("dMine.png");
+			mine = new ImageIcon(mine.getImage().getScaledInstance(frame.getWidth()/width, frame.getHeight()/height, Image.SCALE_SMOOTH));
+			flag = new ImageIcon ("dFlag.png");
+			flag = new ImageIcon(flag.getImage().getScaledInstance(frame.getWidth()/width, frame.getHeight()/height, Image.SCALE_SMOOTH));
 		}
 		if (e.getSource() == sweet){
+			centerImage = new ImageIcon ("cCenter.png");
+			centerImage = new ImageIcon(centerImage.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
+			mine = new ImageIcon ("cMine.png");
+			mine = new ImageIcon(mine.getImage().getScaledInstance(frame.getWidth()/width, frame.getHeight()/height, Image.SCALE_SMOOTH));
+			flag = new ImageIcon ("cFlag.png");
+			flag = new ImageIcon(flag.getImage().getScaledInstance(frame.getWidth()/width, frame.getHeight()/height, Image.SCALE_SMOOTH));
 		}
 		if (e.getSource() == savory){
+			centerImage = new ImageIcon ("sCenter.png");
+			centerImage = new ImageIcon(centerImage.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
+			mine = new ImageIcon ("sMine.png");
+			mine = new ImageIcon(mine.getImage().getScaledInstance(frame.getWidth()/width, frame.getHeight()/height, Image.SCALE_SMOOTH));
+			flag = new ImageIcon ("sFlag.png");
+			flag = new ImageIcon(flag.getImage().getScaledInstance(frame.getWidth()/width, frame.getHeight()/height, Image.SCALE_SMOOTH));
+		}
+		if (e.getSource() == center) {
+			changeLevel();
 		}
 		revalidate();
 	}
@@ -162,7 +185,7 @@ public class Minesweeper extends JPanel implements ActionListener, MouseListener
 				togglers[0][0].setSelected (false);
 				togglers[0][0].setIcon (null);
 			}
-		}
+		} 
 	}
 
 	public void mouseEntered (MouseEvent e){
