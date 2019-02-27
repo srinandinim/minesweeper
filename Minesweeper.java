@@ -131,22 +131,36 @@ public class Minesweeper extends JPanel implements ActionListener, MouseListener
 			changeLevel();
 		}
 		if (e.getSource() == mDefault){
+			changeIcon("default");
+		}
+		if (e.getSource() == sweet){
+			changeIcon("sweet");
+		}
+		if (e.getSource() == savory){
+			changeIcon("savory");
+		}
+		if (e.getSource() == center) {
+			changeLevel();
+		}
+		revalidate();
+	}
+	
+	public void changeIcon(String type) {
+		if (type.equals("default")) {
 			centerImage = new ImageIcon ("dCenter.png");
 			centerImage = new ImageIcon(centerImage.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
 			mine = new ImageIcon ("dMine.png");
 			mine = new ImageIcon(mine.getImage().getScaledInstance(frame.getWidth()/width, frame.getHeight()/height, Image.SCALE_SMOOTH));
 			flag = new ImageIcon ("dFlag.png");
 			flag = new ImageIcon(flag.getImage().getScaledInstance(frame.getWidth()/width, frame.getHeight()/height, Image.SCALE_SMOOTH));
-		}
-		if (e.getSource() == sweet){
+		} else if (type.equals("sweet")) {
 			centerImage = new ImageIcon ("cCenter.png");
 			centerImage = new ImageIcon(centerImage.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
 			mine = new ImageIcon ("cMine.png");
 			mine = new ImageIcon(mine.getImage().getScaledInstance(frame.getWidth()/width, frame.getHeight()/height, Image.SCALE_SMOOTH));
 			flag = new ImageIcon ("cFlag.png");
 			flag = new ImageIcon(flag.getImage().getScaledInstance(frame.getWidth()/width, frame.getHeight()/height, Image.SCALE_SMOOTH));
-		}
-		if (e.getSource() == savory){
+		} else if (type.equals("savory")) {
 			centerImage = new ImageIcon ("sCenter.png");
 			centerImage = new ImageIcon(centerImage.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
 			mine = new ImageIcon ("sMine.png");
@@ -154,10 +168,13 @@ public class Minesweeper extends JPanel implements ActionListener, MouseListener
 			flag = new ImageIcon ("sFlag.png");
 			flag = new ImageIcon(flag.getImage().getScaledInstance(frame.getWidth()/width, frame.getHeight()/height, Image.SCALE_SMOOTH));
 		}
-		if (e.getSource() == center) {
-			changeLevel();
-		}
-		revalidate();
+		scoreBoard = new JPanel();
+		center = new JButton (centerImage);
+		center.setPreferredSize(new Dimension(50, 50));
+		center.addActionListener(this);
+		scoreBoard.add(center);
+		topPanel.add(scoreBoard, BorderLayout.SOUTH);
+		frame.add(topPanel, BorderLayout.NORTH);
 	}
 
 	public void changeLevel(){
