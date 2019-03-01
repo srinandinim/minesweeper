@@ -42,7 +42,6 @@ public class Minesweeper extends JPanel implements ActionListener, MouseListener
 	int startingFlag;
 	int flagCount = 0;
 	Date startDate;
-	int seconds;
 	String spacing = "     ";
 	
 	ArrayList<Point> minePositions;
@@ -128,7 +127,7 @@ public class Minesweeper extends JPanel implements ActionListener, MouseListener
 		numberColors[0] = Color.BLUE; //Standard Blue
 		numberColors[1] = new Color(0, 100, 0); //Dark Green
 		numberColors[2] = Color.RED; //Standard Red
-		numberColors[3] = Color.BLACK; //Standard Black
+		numberColors[3] = new Color(25, 25, 112); //Midnight Blue
 		numberColors[4] = new Color(255, 140, 0); //Dark Orange
 		numberColors[5] = new Color(139, 69, 19); //Saddle Brown
 		numberColors[6] = new Color(128, 0, 128); //Purple
@@ -281,8 +280,6 @@ public class Minesweeper extends JPanel implements ActionListener, MouseListener
 		}
 		flagCount = 0;
 		flagsRemaining.setText(spacing + (startingFlag-flagCount) + spacing);
-		seconds = 0;
-		timer.setText(spacing + seconds + spacing);
 		gameSetup();
 		frame.add(panel,BorderLayout.CENTER);
 	}
@@ -304,10 +301,6 @@ public class Minesweeper extends JPanel implements ActionListener, MouseListener
 	}
 
 	public void mousePressed (MouseEvent e){
-		if (seconds == 0) {
-			startDate = new Date();
-			timer.setText(spacing + getTimerValue() + spacing);
-		}
 		if (e.getButton() == MouseEvent.BUTTON3){
 			for (int i = 0; i < togglers.length; i++){
 				for (int j = 0; j < togglers[0].length; j++){
@@ -360,7 +353,7 @@ public class Minesweeper extends JPanel implements ActionListener, MouseListener
 	}
 
 	public static void main (String[] args){
-		Minesweeper app = new Minesweeper();
+		Minesweeper game = new Minesweeper();
 	}
 
 }
