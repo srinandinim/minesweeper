@@ -1,4 +1,3 @@
-package minesweeper;
 
 import javax.swing.*;
 import java.awt.*;
@@ -7,11 +6,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 public class Minesweeper extends JPanel implements ActionListener, MouseListener {
-
-	/*
-	 * Timer
-	 * Fix Map Expansion (does not expand completely/expands too much)
-	 */
 
 	JFrame frame;
 
@@ -60,6 +54,7 @@ public class Minesweeper extends JPanel implements ActionListener, MouseListener
 		flag[3] = new ImageIcon(flag[0].getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH));
 		centerImage[3] = new ImageIcon(centerImage[0].getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
 		centerImage[4] = new ImageIcon("wCenter.png");;
+
 		// Menu Bar
 		menuBar = new JMenuBar();
 		game = new JMenu("Game");
@@ -124,7 +119,6 @@ public class Minesweeper extends JPanel implements ActionListener, MouseListener
 		numberColors[5] = new Color(139, 69, 19); // Saddle Brown
 		numberColors[6] = new Color(128, 0, 128); // Purple
 		numberColors[7] = new Color(128, 0, 0); // Maroon
-		numberColors[8] = new Color(255, 20, 147); // Deep Pink
 
 		// Score Board
 		scoreBoard = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -199,11 +193,9 @@ public class Minesweeper extends JPanel implements ActionListener, MouseListener
 			minesRemaining = 40;
 		if (width == 30)
 			minesRemaining = 90;
-		for (int i = 0; i < numbers.length; i++) {
-			for (int j = 0; j < numbers[0].length; j++) {
+		for (int i = 0; i < numbers.length; i++)
+			for (int j = 0; j < numbers[0].length; j++)
 				numbers[i][j] = 0;
-			}
-		}
 
 		// Randomly assign the mine positions
 		minePositions = new HashSet<>();
@@ -219,7 +211,6 @@ public class Minesweeper extends JPanel implements ActionListener, MouseListener
 				numbers[row][col] = -1;
 			}
 		}
-		System.out.println(minePositions);
 
 		// Fill buttons with values based on mine positions
 		for (int i = 0; i < numbers.length; i++) {
@@ -241,15 +232,12 @@ public class Minesweeper extends JPanel implements ActionListener, MouseListener
 	}
 
 	public void changeIcon(String type) {
-		if (type.equals("default")) {
+		if (type.equals("default"))
 			currentTheme = 0;
-
-		} else if (type.equals("sweet")) {
+		else if (type.equals("sweet"))
 			currentTheme = 1;
-
-		} else if (type.equals("savory")) {
+		else if (type.equals("savory"))
 			currentTheme = 2;
-		}
 		mine[3] = new ImageIcon(mine[currentTheme].getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH));
 		flag[3] = new ImageIcon(flag[currentTheme].getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH));
 		centerImage[3] = new ImageIcon(centerImage[currentTheme].getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
@@ -291,25 +279,27 @@ public class Minesweeper extends JPanel implements ActionListener, MouseListener
 	}
 
 	public void expandMap(int row, int col) {
-		togglers[row][col].setSelected(true);
-		for (int x = -1; x < 2; x++) {
-			for (int y = -1; y < 2; y++) {
-				try {
-					if (numbers[row + x][col + y] == 0 && !togglers[row + x][col + y].isSelected())
-						expandMap(row + x, col + y);
-					else if (numbers[row + x][col + y] != -1 && togglers[x][y].getIcon() != flag[3]) {
-						togglers[row + x][col + y].setSelected(true);
-						togglers[row + x][col + y].setMargin(new Insets(0, 0, 0, 0));
-						togglers[row + x][col + y].setFont(new Font("Lucida Sans", Font.PLAIN, 20));
-						togglers[row + x][col + y].setForeground(numberColors[numbers[row + x][col + y] - 1]);
-						togglers[row + x][col + y].setText(numbers[row + x][col + y] + "");
+		if (togglers[row][col].getIcon()==null) {
+			togglers[row][col].setSelected(true);
+			if (numbers[row][col] > 0) {
+				togglers[row][col].setMargin(new Insets(0, 0, 0, 0));
+				togglers[row][col].setFont(new Font("Lucida Sans", Font.PLAIN, 20));
+				togglers[row][col].setForeground(numberColors[numbers[row][col] - 1]);
+				togglers[row][col].setText(numbers[row][col] + "");
+			}
+			else {
+				for (int x = -1; x < 2; x++) {
+					for (int y = -1; y < 2; y++) {
+						try {
+							if(!togglers[row + x][col + y].isSelected())
+								expandMap(row + x, col + y);
+						} catch (Exception e) { }
 					}
-				} catch (Exception e) {
 				}
 			}
 		}
 	}
-	
+
 	public void checkWinning() {
 		int flagCheckCount = 0;
 		int openBoxCount = 0;
@@ -341,7 +331,7 @@ public class Minesweeper extends JPanel implements ActionListener, MouseListener
 
 	public void mouseExited(MouseEvent e) {
 	}
-	
+
 	public void mouseClicked(MouseEvent e) {
 	}
 
@@ -379,8 +369,10 @@ public class Minesweeper extends JPanel implements ActionListener, MouseListener
 					for (int j = 0; j < togglers[0].length; j++) {
 						if (e.getSource() == togglers[i][j]) {
 							togglers[i][j].setSelected(false);
-							if (togglers[i][j].getIcon() == null) {
-								if (minePositions.contains(new Point(i, j))) {
+							if (togglers[i][j].getIcon() == null)
+							{
+								if (minePositions.contains(new Point(i, j)))
+								{
 									togglers[i][j].setIcon(mine[3]);
 									togglers[i][j].setDisabledIcon(mine[3]);
 									gameOver();
@@ -388,13 +380,12 @@ public class Minesweeper extends JPanel implements ActionListener, MouseListener
 									if (togglers[i][j].isSelected() == false)
 										expandMap(i, j);
 								}
-							} 
+							}
 						}
 					}
 				}
 			}
 			if (startingFlag - flagCount == 0) {
-				System.out.println("zero");
 				checkWinning();
 			}
 		}
