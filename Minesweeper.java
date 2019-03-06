@@ -410,26 +410,5 @@ public class Minesweeper extends JPanel implements ActionListener, MouseListener
 	public static void main(String[] args) {
 		Minesweeper game = new Minesweeper();
 	}
-	
-	public class TimerThread implements Runnable {
-		int i = 0;
-		boolean run = true;
-		
-		public void terminate() {
-			run = false;
-			i = 0;
-		}
-		
-		public void run() {
-			while (run) {
-				timer.setText(spacing + i + spacing);
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-				}
-				i++;
-			}
-		}
-	}
 
 }
