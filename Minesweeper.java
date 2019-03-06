@@ -1,4 +1,4 @@
-
+package minesweeper;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -31,6 +31,8 @@ public class Minesweeper extends JPanel implements ActionListener, MouseListener
 	boolean gameOver = false;
 	HashSet<Point> minePositions;
 	boolean firstClick = true;
+	Timer timerThread;
+	int seconds;
 
 	public Minesweeper() {
 		frame = new JFrame("Minesweeper");
@@ -262,10 +264,14 @@ public class Minesweeper extends JPanel implements ActionListener, MouseListener
 		flagsRemaining.setText(spacing + (startingFlag - flagCount) + spacing);
 		gameOver = false;
 		firstClick = true;
+		timerThread.stop();
+		seconds = 0;
+		timer.setText(spacing + seconds + spacing);
 		frame.add(panel, BorderLayout.CENTER);
 	}
 
 	public void gameOver() {
+		timerThread.stop();
 		for (int i = 0; i < togglers.length; i++) {
 			for (int j = 0; j < togglers[0].length; j++) {
 				togglers[i][j].setEnabled(false);
@@ -338,6 +344,16 @@ public class Minesweeper extends JPanel implements ActionListener, MouseListener
 	public void mouseReleased(MouseEvent e) {
 		if (!gameOver) {
 			if (firstClick) {
+				int delay = 1000;
+				
+				ActionListener actionListener = new ActionListener() {
+					public void actionPerformed(ActionEvent event) {
+						seconds++;
+						timer.setText(spacing + seconds + spacing);
+					}
+				};
+				timerThread = new Timer(delay,actionListener);
+				timerThread.start();
 				for (int i = 0; i < togglers.length; i++) {
 					for (int j = 0; j < togglers[0].length; j++) {
 						if (e.getSource() == togglers[i][j]) {
@@ -393,6 +409,27 @@ public class Minesweeper extends JPanel implements ActionListener, MouseListener
 
 	public static void main(String[] args) {
 		Minesweeper game = new Minesweeper();
+	}
+	
+	public class TimerThread implements Runnable {
+		int i = 0;
+		boolean run = true;
+		
+		public void terminate() {
+			run = false;
+			i = 0;
+		}
+		
+		public void run() {
+			while (run) {
+				timer.setText(spacing + i + spacing);
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+				}
+				i++;
+			}
+		}
 	}
 
 }
