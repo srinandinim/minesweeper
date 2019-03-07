@@ -25,13 +25,13 @@ public class Minesweeper extends JPanel implements ActionListener, MouseListener
 	int width = 9, height = 9;
 	ImageIcon[] flag, mine, centerImage;
 	JButton center;
-	JLabel timer, flagsRemaining;
+	JLabel timerText, flagsRemaining;
 	int startingFlag, flagCount;
 	String spacing = "     ";
 	boolean gameOver = false;
 	HashSet<Point> minePositions;
 	boolean firstClick = true;
-	Timer timerThread;
+	Timer timer;
 	int seconds;
 
 	public Minesweeper() {
@@ -130,11 +130,11 @@ public class Minesweeper extends JPanel implements ActionListener, MouseListener
 		center = new JButton(centerImage[3]);
 		center.setPreferredSize(new Dimension(50, 50));
 		center.addActionListener(this);
-		timer = new JLabel(spacing + "0" + spacing);
-		timer.setFont(new Font("Lucida Sans", Font.PLAIN, 24));
+		timerText = new JLabel(spacing + seconds + spacing);
+		timerText.setFont(new Font("Lucida Sans", Font.PLAIN, 24));
 		scoreBoard.add(flagsRemaining);
 		scoreBoard.add(center);
-		scoreBoard.add(timer);
+		scoreBoard.add(timerText);
 
 		// Combine Panels
 		topPanel = new JPanel(new BorderLayout());
@@ -199,6 +199,14 @@ public class Minesweeper extends JPanel implements ActionListener, MouseListener
 			for (int j = 0; j < numbers[0].length; j++)
 				numbers[i][j] = 0;
 
+		//Set invalid mine positions
+		ArrayList<Point> invalidPositions = new ArrayList<Point>();
+		for (int x = r-1; x < r+2; x++) {
+			for (int y = c-1; y < c+2; y++) {
+				invalidPositions.add(new Point(x, y));
+			}
+		}
+				
 		// Randomly assign the mine positions
 		minePositions = new HashSet<>();
 		while (minePositions.size() != minesRemaining) {
@@ -208,9 +216,9 @@ public class Minesweeper extends JPanel implements ActionListener, MouseListener
 				row = (int) (Math.random() * height);
 				col = (int) (Math.random() * width);
 			} while (togglers[row][col].getIcon() != null);
-			if (row != r && col != c) {
+			if (!invalidPositions.contains(new Point(row, col))) {
 				minePositions.add(new Point(row, col));
-				numbers[row][col] = -1;
+				numbers[row][col] = -1;	
 			}
 		}
 
@@ -263,15 +271,16 @@ public class Minesweeper extends JPanel implements ActionListener, MouseListener
 		flagCount = 0;
 		flagsRemaining.setText(spacing + (startingFlag - flagCount) + spacing);
 		gameOver = false;
-		firstClick = true;
-		timerThread.stop();
 		seconds = 0;
-		timer.setText(spacing + seconds + spacing);
+		if (!firstClick)
+			timer.stop();
+		firstClick = true;
+		timerText.setText(spacing + seconds + spacing);
 		frame.add(panel, BorderLayout.CENTER);
 	}
 
 	public void gameOver() {
-		timerThread.stop();
+		timer.stop();
 		for (int i = 0; i < togglers.length; i++) {
 			for (int j = 0; j < togglers[0].length; j++) {
 				togglers[i][j].setEnabled(false);
@@ -322,7 +331,6 @@ public class Minesweeper extends JPanel implements ActionListener, MouseListener
 		}
 		if (flagCheckCount == startingFlag && openBoxCount == height*width-startingFlag) {
 			gameOver = true;
-			System.out.println ("game over--winning");
 			centerImage[3] = new ImageIcon(centerImage[4].getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH));
 			center.setIcon(centerImage[3]);
 			gameOver();
@@ -345,15 +353,14 @@ public class Minesweeper extends JPanel implements ActionListener, MouseListener
 		if (!gameOver) {
 			if (firstClick) {
 				int delay = 1000;
-				
 				ActionListener actionListener = new ActionListener() {
 					public void actionPerformed(ActionEvent event) {
 						seconds++;
-						timer.setText(spacing + seconds + spacing);
+						timerText.setText(spacing + seconds + spacing);
 					}
 				};
-				timerThread = new Timer(delay,actionListener);
-				timerThread.start();
+				timer = new Timer(delay,actionListener);
+				timer.start();
 				for (int i = 0; i < togglers.length; i++) {
 					for (int j = 0; j < togglers[0].length; j++) {
 						if (e.getSource() == togglers[i][j]) {
